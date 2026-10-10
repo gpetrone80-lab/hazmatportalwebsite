@@ -37,6 +37,10 @@
     .nav-btn{border:0;width:100%;color:var(--rail-ink);background:transparent;display:flex;align-items:center;gap:11px;padding:11px 12px;border-radius:8px;text-align:left;font-weight:600;cursor:pointer}
     .nav-btn:hover{background:rgba(255,255,255,.08)}
     .nav-btn.active{background:#e7f6fd;color:#0a3f59}
+    .new-badge{display:inline-flex;align-items:center;justify-content:center;width:max-content;padding:2px 7px;border-radius:999px;background:#ffb703;color:#17242a;font-family:"Source Sans 3",sans-serif;font-size:10px;font-weight:800;line-height:1.35;letter-spacing:.07em;text-transform:uppercase;white-space:nowrap;vertical-align:2px}
+    .nav-btn .new-badge{margin-left:auto}
+    .tool-card h3{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+    .btn .new-badge{margin-left:7px;background:#ffcf40;color:#17242a}
     @media(prefers-color-scheme:dark){.nav-btn.active{background:#16506c;color:#fff}}
     .nav-btn svg,.icon svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;flex:0 0 auto}
     .rail-foot{margin-top:auto;padding:14px 12px 0;border-top:1px solid rgba(255,255,255,.13);font-size:12px;color:var(--rail-muted)}
@@ -109,13 +113,13 @@
       <button class="nav-btn active" data-go="dashboard"><svg viewBox="0 0 24 24"><path d="M4 13h6V4H4zM14 20h6V11h-6zM4 20h6v-3H4zM14 7h6V4h-6z"/></svg>Dashboard</button>
     </div>
     <div class="nav-group"><div class="nav-label">Field tools</div>
-      <button class="nav-btn" data-go="erg"><svg viewBox="0 0 24 24"><path d="M5 4h10a4 4 0 0 1 4 4v12H8a3 3 0 0 1-3-3z"/><path d="M8 20a3 3 0 0 1 0-6h11"/></svg>ERG lookup</button>
+      <button class="nav-btn" data-go="erg"><svg viewBox="0 0 24 24"><path d="M5 4h10a4 4 0 0 1 4 4v12H8a3 3 0 0 1-3-3z"/><path d="M8 20a3 3 0 0 1 0-6h11"/></svg>ERG lookup <span class="new-badge">New</span></button>
       <button class="nav-btn" data-go="foam"><svg viewBox="0 0 24 24"><path d="M12 3s6 6.2 6 11a6 6 0 0 1-12 0c0-4.8 6-11 6-11z"/><path d="M9 15c.5 1.5 1.5 2 3 2"/></svg>Foam calculator</button>
-      <button class="nav-btn" data-go="converter"><svg viewBox="0 0 24 24"><path d="M7 7h12M16 4l3 3-3 3M17 17H5M8 14l-3 3 3 3"/></svg>Unit converter</button>
-      <button class="nav-btn" data-go="accountability"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2M16 4.5a3 3 0 0 1 0 7M17 14a5 5 0 0 1 4 5"/></svg>Accountability</button>
-      <button class="nav-btn" data-go="meter"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 13h3M15 13h1M8 17h3M15 17h1"/></svg>Meter log</button>
+      <button class="nav-btn" data-go="converter"><svg viewBox="0 0 24 24"><path d="M7 7h12M16 4l3 3-3 3M17 17H5M8 14l-3 3 3 3"/></svg>Unit converter <span class="new-badge">New</span></button>
+      <button class="nav-btn" data-go="accountability"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2M16 4.5a3 3 0 0 1 0 7M17 14a5 5 0 0 1 4 5"/></svg>Accountability <span class="new-badge">New</span></button>
+      <button class="nav-btn" data-go="meter"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 13h3M15 13h1M8 17h3M15 17h1"/></svg>Meter log <span class="new-badge">New</span></button>
       <button class="nav-btn" data-go="board"><svg viewBox="0 0 24 24"><path d="M9 5h6M9 3v4M7 5H5v16h14V5h-2M8 11h8M8 15h8"/></svg>Research board</button>
-      <button class="nav-btn" data-go="install"><svg viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M5 19h14"/></svg>Get mobile app</button>
+      <button class="nav-btn" data-go="install"><svg viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M5 19h14"/></svg>Get mobile app <span class="new-badge">New</span></button>
     </div>
     <div class="nav-group"><div class="nav-label">Reference</div><button class="nav-btn" data-go="resources"><svg viewBox="0 0 24 24"><path d="M6 3h12v18H6zM9 7h6M9 11h6M9 15h4"/></svg>Forms & resources</button><button class="nav-btn" data-go="feedback"><svg viewBox="0 0 24 24"><path d="M4 5h16v12H8l-4 4z"/><path d="M8 9h8M8 13h5"/></svg>Suggest an improvement</button></div>
     <div class="rail-foot">Session workspace<br>Export incident data before closing.</div>
@@ -130,19 +134,19 @@
           <h1>Hazmat response tools, ready when the call comes in.</h1>
           <p class="lede">Search the portal, open team references, or launch an incident tool without leaving the workspace.</p>
           <div class="search-wrap"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m16 16 5 5"/></svg><input id="portalSearch" class="search" type="search" placeholder="Search tools, forms, protocols…" autocomplete="off"></div>
-          <div class="actions"><button class="btn primary" type="button" data-go="install">Get the mobile app</button></div>
+          <div class="actions"><button class="btn primary" type="button" data-go="install">Get the mobile app <span class="new-badge">New</span></button></div>
         </div>
         <div class="hero-metric"><strong>7</strong><span>operational tools in one responsive workspace</span></div>
       </div>
       <div class="section-head"><div><h2>Operational tools</h2><p>Calculators, logs and quick reference</p></div><div class="session-badge">Session active</div></div>
       <div id="toolGrid" class="grid">
-        <button class="tool-card" data-go="erg" data-search="erg emergency response guide un chemical lookup offline"><span class="icon"><svg viewBox="0 0 24 24"><path d="M5 4h10a4 4 0 0 1 4 4v12H8a3 3 0 0 1-3-3z"/><path d="M8 20a3 3 0 0 1 0-6h11"/></svg></span><h3>ERG lookup</h3><p>Search ERG 2024 by UN number or material name.</p><span class="arrow">Open lookup →</span></button>
+        <button class="tool-card" data-go="erg" data-search="erg emergency response guide un chemical lookup offline"><span class="icon"><svg viewBox="0 0 24 24"><path d="M5 4h10a4 4 0 0 1 4 4v12H8a3 3 0 0 1-3-3z"/><path d="M8 20a3 3 0 0 1 0-6h11"/></svg></span><h3>ERG lookup <span class="new-badge">New</span></h3><p>Search ERG 2024 by UN number or material name.</p><span class="arrow">Open lookup →</span></button>
         <button class="tool-card" data-go="foam" data-search="foam flow calculator hydrocarbon polar solvent gallons"><span class="icon"><svg viewBox="0 0 24 24"><path d="M12 3s6 6.2 6 11a6 6 0 0 1-12 0c0-4.8 6-11 6-11z"/><path d="M9 15c.5 1.5 1.5 2 3 2"/></svg></span><h3>Foam calculator</h3><p>Calculate 15-minute water and concentrate requirements.</p><span class="arrow">Calculate →</span></button>
-        <button class="tool-card" data-go="converter" data-search="unit converter pressure volume length temperature psi bar gallons liters"><span class="icon"><svg viewBox="0 0 24 24"><path d="M7 7h12M16 4l3 3-3 3M17 17H5M8 14l-3 3 3 3"/></svg></span><h3>Unit converter</h3><p>Pressure, volume, length and temperature conversions.</p><span class="arrow">Convert units →</span></button>
-        <button class="tool-card" data-go="accountability" data-search="accountability roster par zones hot warm cold staging"><span class="icon"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2M16 4.5a3 3 0 0 1 0 7M17 14a5 5 0 0 1 4 5"/></svg></span><h3>Accountability tracker</h3><p>Track personnel, zones, entry time and PAR checks.</p><span class="arrow">Start roster →</span></button>
-        <button class="tool-card" data-go="meter" data-search="meter log monitor calibration bump o2 lel co h2s voc readings"><span class="icon"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 13h3M15 13h1M8 17h3M15 17h1"/></svg></span><h3>Meter log</h3><p>Add multiple monitors and record timestamped readings.</p><span class="arrow">Open log →</span></button>
+        <button class="tool-card" data-go="converter" data-search="unit converter pressure volume length temperature psi bar gallons liters"><span class="icon"><svg viewBox="0 0 24 24"><path d="M7 7h12M16 4l3 3-3 3M17 17H5M8 14l-3 3 3 3"/></svg></span><h3>Unit converter <span class="new-badge">New</span></h3><p>Pressure, volume, length and temperature conversions.</p><span class="arrow">Convert units →</span></button>
+        <button class="tool-card" data-go="accountability" data-search="accountability roster par zones hot warm cold staging"><span class="icon"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2M16 4.5a3 3 0 0 1 0 7M17 14a5 5 0 0 1 4 5"/></svg></span><h3>Accountability tracker <span class="new-badge">New</span></h3><p>Track personnel, zones, entry time and PAR checks.</p><span class="arrow">Start roster →</span></button>
+        <button class="tool-card" data-go="meter" data-search="meter log monitor calibration bump o2 lel co h2s voc readings"><span class="icon"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 13h3M15 13h1M8 17h3M15 17h1"/></svg></span><h3>Meter log <span class="new-badge">New</span></h3><p>Add multiple monitors and record timestamped readings.</p><span class="arrow">Open log →</span></button>
         <button class="tool-card" data-go="board" data-search="hazmat research board chemical nfpa properties ppe tactical"><span class="icon"><svg viewBox="0 0 24 24"><path d="M9 5h6M9 3v4M7 5H5v16h14V5h-2M8 11h8M8 15h8"/></svg></span><h3>Research board</h3><p>Organize chemical properties, hazards, PPE and tactics.</p><span class="arrow">Open board →</span></button>
-        <button class="tool-card" data-go="install" data-search="crew rollout mobile app install qr code iphone android desktop"><span class="icon"><svg viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M5 19h14"/></svg></span><h3>Mobile app</h3><p>Scan the QR code or open the app directly on this device.</p><span class="arrow">Get the app →</span></button>
+        <button class="tool-card" data-go="install" data-search="crew rollout mobile app install qr code iphone android desktop"><span class="icon"><svg viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M5 19h14"/></svg></span><h3>Mobile app <span class="new-badge">New</span></h3><p>Scan the QR code or open the app directly on this device.</p><span class="arrow">Get the app →</span></button>
       </div>
       <div class="section-head"><div><h2>Quick reference</h2><p>Frequently used official and team links</p></div><button class="btn small" data-go="resources">View all resources</button></div>
       <div class="resource-list searchable-resources">
@@ -321,5 +325,46 @@ const ERG_NAME_INDEX = {"acetylene, dissolved":"1001","air, compressed":"1002","
   renderRoster();renderMeters();foamCalc();setInterval(()=>{if($('#accountability').classList.contains('active'))renderRoster()},30000);
 })();
 </script>
+<!-- v14 What's New popup (hand-added: the site builder cannot do once-per-user dismissal).
+     Re-apply after every artifact export before pushing to the repo:
+     insert this snippet immediately before </body> in the exported index.html. -->
+<style>
+.wn-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:9999;padding:20px;}
+.wn-box{background:#101c26;color:#e8f1f6;border:1px solid #2a3b47;border-radius:16px;padding:26px;max-width:430px;width:100%;box-shadow:0 12px 40px rgba(0,0,0,.5);}
+.wn-title{font-family:"Barlow Condensed",sans-serif;font-size:26px;font-weight:700;letter-spacing:.5px;margin-bottom:10px;}
+.wn-list{font-size:14px;line-height:1.65;padding-left:20px;margin:0 0 8px;}
+.wn-list li{margin-bottom:6px;}
+.wn-btn{display:inline-block;background:#c72f2f;color:#fff;font-weight:700;font-size:14px;padding:11px 28px;border:none;border-radius:10px;margin-top:12px;cursor:pointer;}
+</style>
+<div id="wnModal" class="wn-overlay">
+  <div class="wn-box">
+    <div class="wn-title">What&rsquo;s New</div>
+    <ul class="wn-list">
+      <li><strong>Training Log</strong> &mdash; now saves to our shared Firebase database (replaces the Microsoft Form)</li>
+      <li><strong>ERG Lookup</strong> &mdash; offline, 1,983 materials</li>
+      <li><strong>Unit Converter</strong> &mdash; pressure, volume, length, temperature</li>
+      <li><strong>Accountability Tracker</strong> &mdash; zones, PAR checks, timers</li>
+      <li><strong>Meter Log</strong> &mdash; multi-monitor readings with print &amp; CSV export</li>
+      <li><strong>Get the mobile app</strong> &mdash; install button + QR code</li>
+    </ul>
+    <button class="wn-btn" id="wnOk">Got it</button>
+  </div>
+</div>
+<script>
+(function(){
+  var KEY='wn_seen_v1';
+  try{
+    if(localStorage.getItem(KEY)==='1')return;
+    var m=document.getElementById('wnModal');
+    if(!m)return;
+    m.style.display='flex';
+    document.getElementById('wnOk').addEventListener('click',function(){
+      m.style.display='none';
+      try{localStorage.setItem(KEY,'1');}catch(e){}
+    });
+  }catch(e){}
+})();
+</script>
+
 </body>
 </html>

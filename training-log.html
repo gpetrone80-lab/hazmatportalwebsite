@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pinellas County Hazmat Training Log</title>
+<link rel="icon" type="image/png" href="https://gpetrone80-lab.github.io/Hazmatapp/Hazmat_logo.png">
+<style>
+  :root { --navy:#101c26; --red:#c72f2f; --ink:#1c2b36; --muted:#5d6f7d; --line:#dbe4ea; --bg:#f2f5f7; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:"Source Sans 3",system-ui,-apple-system,"Segoe UI",sans-serif; background:var(--bg); color:var(--ink); }
+  .topbar { background:var(--navy); color:#e8f1f6; padding:14px 20px; display:flex; align-items:center; gap:12px; }
+  .topbar a { color:#e8f1f6; text-decoration:none; font-size:13px; opacity:.8; }
+  .topbar .t { font-family:"Barlow Condensed",sans-serif; font-size:22px; font-weight:700; letter-spacing:.4px; }
+  .wrap { max-width:720px; margin:0 auto; padding:24px 16px 60px; }
+  .card { background:#fff; border:1px solid var(--line); border-radius:14px; padding:24px; margin-top:16px; box-shadow:0 4px 18px rgba(16,28,38,.06); }
+  h1 { font-family:"Barlow Condensed",sans-serif; font-size:30px; margin:0; }
+  .sub { font-size:13px; color:var(--muted); margin:6px 0 0; }
+  label.q { display:block; font-size:14px; font-weight:700; margin:20px 0 8px; }
+  label.q .req { color:var(--red); }
+  input[type=text], input[type=date], input[type=password] { width:100%; padding:11px 13px; border-radius:10px; border:1px solid var(--line); font-size:15px; font-family:inherit; background:#fff; color:var(--ink); }
+  input:focus { outline:2px solid var(--red); outline-offset:1px; border-color:var(--red); }
+  .radio { display:flex; align-items:center; gap:10px; padding:8px 0; font-size:15px; cursor:pointer; }
+  .radio input { width:18px; height:18px; accent-color:var(--red); margin:0; }
+  .other-wrap { display:flex; align-items:center; gap:10px; }
+  .other-wrap input[type=text] { max-width:280px; }
+  .btn { display:inline-block; margin-top:22px; padding:13px 30px; border-radius:10px; border:none; background:var(--red); color:#fff; font-weight:700; font-size:15px; cursor:pointer; font-family:inherit; }
+  .btn:active { transform:scale(.98); }
+  .btn:disabled { opacity:.6; cursor:wait; }
+  .okmsg, .errmsg { display:none; border-radius:10px; padding:13px 16px; margin-top:16px; font-size:14px; }
+  .okmsg { background:#167847; color:#fff; }
+  .errmsg { background:#fdecea; color:#a02020; border:1px solid #f3c1c1; }
+  .dlrow { display:flex; gap:10px; margin-top:8px; }
+  .dlrow input { flex:1; }
+  .dlrow .btn { margin-top:0; white-space:nowrap; }
+  .fine { font-size:12px; color:var(--muted); margin-top:10px; }
+  .foot { text-align:center; font-size:12px; color:var(--muted); margin-top:28px; }
+</style>
+</head>
+<body>
+<div class="topbar">
+  <a href="https://gpetrone80-lab.github.io/hazmatportalwebsite/">&larr; Back to site</a>
+  <span class="t">Pinellas County Hazmat Team</span>
+</div>
+
+<div class="wrap">
+  <div class="card">
+    <h1>Pinellas County Hazmat Training Log</h1>
+    <p class="sub">When you submit this form, it will not automatically collect your details like name and email address unless you provide it yourself.</p>
+
+    <label class="q" for="tDate">1. Training Date <span class="req">*</span></label>
+    <input type="date" id="tDate">
+
+    <label class="q" for="tFirst">2. First name <span class="req">*</span></label>
+    <input type="text" id="tFirst" placeholder="Enter your answer" autocomplete="off">
+
+    <label class="q" for="tLast">3. Last Name <span class="req">*</span></label>
+    <input type="text" id="tLast" placeholder="Enter your answer" autocomplete="off">
+
+    <label class="q">4. Select the department <span class="req">*</span></label>
+    <div id="deptRadios">
+      <label class="radio"><input type="radio" name="dept" value="Largo Fire Rescue"> Largo Fire Rescue</label>
+      <label class="radio"><input type="radio" name="dept" value="Palm Harbor Fire Rescue"> Palm Harbor Fire Rescue</label>
+      <label class="radio"><input type="radio" name="dept" value="Pinellas Park Fire Rescue"> Pinellas Park Fire Rescue</label>
+      <label class="radio"><input type="radio" name="dept" value="Seminole Fire Rescue"> Seminole Fire Rescue</label>
+      <label class="radio"><input type="radio" name="dept" value="St Petersburg Fire Rescue"> St Petersburg Fire Rescue</label>
+      <label class="radio"><input type="radio" name="dept" value="Pinellas County Sheriff Office"> Pinellas County Sheriff Office</label>
+      <label class="radio"><input type="radio" name="dept" value="Visitor - Guest"> Visitor - Guest</label>
+      <div class="other-wrap"><label class="radio"><input type="radio" name="dept" value="__other"> Other</label><input type="text" id="deptOther" placeholder="Specify" autocomplete="off"></div>
+    </div>
+
+    <button class="btn" id="tSubmit">Submit</button>
+    <div class="okmsg" id="tOk">Training entry recorded. Thank you.</div>
+    <div class="errmsg" id="tErr"></div>
+  </div>
+
+  <div class="card">
+    <h1 style="font-size:24px;">Download training log</h1>
+    <p class="sub">Restricted. Enter the download password to pull all entries as a CSV file.</p>
+    <div class="dlrow">
+      <input type="password" id="dlPass" placeholder="Enter password" autocomplete="off">
+      <button class="btn" id="dlBtn">Download CSV</button>
+    </div>
+    <div class="errmsg" id="dlErr"></div>
+    <p class="fine">CSV columns: training date, first name, last name, department, submitted at.</p>
+  </div>
+
+  <div class="foot">Built and maintained by Gianluca Petrone, Palm Harbor Fire Department, for the Pinellas County Hazardous Materials Response Team.</div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script>
+(function(){
+  var firebaseConfig = {
+    apiKey: "AIzaSyCtXM6a_nyxzZHHfSk7Sza9VQrx8j3eXhU",
+    authDomain: "hazmat-training-d9ba8.firebaseapp.com",
+    projectId: "hazmat-training-d9ba8",
+    storageBucket: "hazmat-training-d9ba8.firebasestorage.app",
+    messagingSenderId: "465126077052",
+    appId: "1:465126077052:web:33404e8b0855fb48590ff9"
+  };
+  var DOWNLOAD_PASSWORD = "Hazmat68";
+  firebase.initializeApp(firebaseConfig);
+  var db = firebase.firestore();
+
+  function deptVal(){
+    var sel = document.querySelector('input[name="dept"]:checked');
+    if(!sel) return "";
+    if(sel.value === "__other"){
+      var o = document.getElementById('deptOther').value.trim();
+      return o || "Other";
+    }
+    return sel.value;
+  }
+  function showErr(id, msg){ var e = document.getElementById(id); e.textContent = msg; e.style.display = 'block'; }
+  function hideErr(id){ document.getElementById(id).style.display = 'none'; }
+
+  document.getElementById('tSubmit').addEventListener('click', function(){
+    hideErr('tErr'); document.getElementById('tOk').style.display = 'none';
+    var date = document.getElementById('tDate').value;
+    var first = document.getElementById('tFirst').value.trim();
+    var last = document.getElementById('tLast').value.trim();
+    var dept = deptVal();
+    if(!date || !first || !last || !dept){ showErr('tErr', 'Please answer all required questions.'); return; }
+    var btn = document.getElementById('tSubmit');
+    btn.disabled = true; btn.textContent = 'Saving...';
+    db.collection('trainingLogs').add({
+      trainingDate: date, firstName: first, lastName: last, department: dept,
+      submittedAt: firebase.firestore.FieldValue.serverTimestamp()
+    }).then(function(){
+      document.getElementById('tOk').style.display = 'block';
+      document.getElementById('tDate').value = '';
+      document.getElementById('tFirst').value = '';
+      document.getElementById('tLast').value = '';
+      document.getElementById('deptOther').value = '';
+      var c = document.querySelector('input[name="dept"]:checked'); if(c) c.checked = false;
+    }).catch(function(err){
+      showErr('tErr', 'Could not save. Check your connection and try again. (' + (err.code || 'error') + ')');
+    }).finally(function(){
+      btn.disabled = false; btn.textContent = 'Submit';
+    });
+  });
+
+  function csvEsc(v){ v = String(v == null ? "" : v); return /[",\n]/.test(v) ? '"' + v.replace(/"/g,'""') + '"' : v; }
+  function fmtTs(ts){
+    try {
+      var d = ts.toDate();
+      return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0') +
+             ' ' + String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
+    } catch(e){ return ''; }
+  }
+  document.getElementById('dlBtn').addEventListener('click', function(){
+    hideErr('dlErr');
+    if(document.getElementById('dlPass').value !== DOWNLOAD_PASSWORD){ showErr('dlErr', 'Wrong password.'); return; }
+    var btn = document.getElementById('dlBtn');
+    btn.disabled = true; btn.textContent = 'Loading...';
+    db.collection('trainingLogs').orderBy('submittedAt', 'desc').get().then(function(snap){
+      var rows = [["Training date","First name","Last name","Department","Submitted at"]];
+      snap.forEach(function(doc){
+        var r = doc.data();
+        rows.push([r.trainingDate, r.firstName, r.lastName, r.department, fmtTs(r.submittedAt)]);
+      });
+      var csv = rows.map(function(r){ return r.map(csvEsc).join(","); }).join("\r\n");
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob([csv], {type:'text/csv'}));
+      var d = new Date();
+      function p2(n){ return String(n).padStart(2,'0'); }
+      a.download = 'training-log-' + d.getFullYear() + p2(d.getMonth()+1) + p2(d.getDate()) + '.csv';
+      document.body.appendChild(a); a.click();
+      setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 500);
+    }).catch(function(err){
+      showErr('dlErr', 'Could not load entries. (' + (err.code || 'error') + ')');
+    }).finally(function(){
+      btn.disabled = false; btn.textContent = 'Download CSV';
+    });
+  });
+})();
+</script>
+</body>
+</html>

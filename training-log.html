@@ -76,12 +76,10 @@
 
   <div class="card">
     <h1 style="font-size:24px;">Download training log</h1>
-    <p class="sub">Restricted. Sign in with the team admin account to pull all entries as a CSV file.</p>
+    <p class="sub">Restricted. Enter the download password to pull all entries as a CSV file.</p>
     <div class="dlrow">
-      <input type="text" id="dlEmail" placeholder="Admin email" autocomplete="username" inputmode="email">
-    </div>
-    <div class="dlrow">
-      <input type="password" id="dlPass" placeholder="Password" autocomplete="current-password">
+      <input type="text" id="dlUser" autocomplete="username" value="lpetrone@palmharborfd.com" hidden>
+      <input type="password" id="dlPass" placeholder="Enter password" autocomplete="current-password">
       <button class="btn" id="dlBtn">Download CSV</button>
     </div>
     <div class="errmsg" id="dlErr"></div>
@@ -106,6 +104,7 @@
   };
   // Downloads are protected by Firebase Authentication + Firestore rules (see firestore.rules),
   // not by anything in this page, because page source is public.
+  var ADMIN_EMAIL = "lpetrone@palmharborfd.com"; // must match firestore.rules
   firebase.initializeApp(firebaseConfig);
   var db = firebase.firestore();
   var auth = firebase.auth();
@@ -160,9 +159,10 @@
   }
   document.getElementById('dlBtn').addEventListener('click', function(){
     hideErr('dlErr');
-    var email = document.getElementById('dlEmail').value.trim();
+    // The password is checked by Firebase against this admin account; nothing secret lives in this page.
+    var email = ADMIN_EMAIL;
     var pass = document.getElementById('dlPass').value;
-    if(!email || !pass){ showErr('dlErr', 'Enter the admin email and password.'); return; }
+    if(!pass){ showErr('dlErr', 'Enter the download password.'); return; }
     var btn = document.getElementById('dlBtn');
     btn.disabled = true; btn.textContent = 'Signing in...';
     auth.signInWithEmailAndPassword(email, pass).catch(function(err){
@@ -186,7 +186,7 @@
       setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 500);
     }).catch(function(err){
       var code = err.code || 'error';
-      if(err.signIn) showErr('dlErr', code === 'auth/network-request-failed' ? 'No connection. Try again with signal.' : 'Wrong email or password.');
+      if(err.signIn) showErr('dlErr', code === 'auth/network-request-failed' ? 'No connection. Try again with signal.' : code === 'auth/too-many-requests' ? 'Too many attempts. Wait a few minutes and try again.' : 'Wrong password.');
       else if(code === 'permission-denied') showErr('dlErr', 'This account is not allowed to download the training log.');
       else showErr('dlErr', 'Could not load entries. (' + code + ')');
     }).finally(function(){

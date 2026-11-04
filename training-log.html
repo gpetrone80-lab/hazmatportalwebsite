@@ -39,7 +39,7 @@
 </head>
 <body>
 <div class="topbar">
-  <a href="https://gpetrone80-lab.github.io/hazmatportalwebsite/">&larr; Back to site</a>
+  <a href="./">&larr; Back to site</a>
   <span class="t">Pinellas County Hazmat Team</span>
 </div>
 
@@ -52,10 +52,10 @@
     <input type="date" id="tDate">
 
     <label class="q" for="tFirst">2. First name <span class="req">*</span></label>
-    <input type="text" id="tFirst" placeholder="Enter your answer" autocomplete="off">
+    <input type="text" id="tFirst" maxlength="60" placeholder="Enter your answer" autocomplete="off">
 
     <label class="q" for="tLast">3. Last Name <span class="req">*</span></label>
-    <input type="text" id="tLast" placeholder="Enter your answer" autocomplete="off">
+    <input type="text" id="tLast" maxlength="60" placeholder="Enter your answer" autocomplete="off">
 
     <label class="q">4. Select the department <span class="req">*</span></label>
     <div id="deptRadios">
@@ -66,7 +66,7 @@
       <label class="radio"><input type="radio" name="dept" value="St Petersburg Fire Rescue"> St Petersburg Fire Rescue</label>
       <label class="radio"><input type="radio" name="dept" value="Pinellas County Sheriff Office"> Pinellas County Sheriff Office</label>
       <label class="radio"><input type="radio" name="dept" value="Visitor - Guest"> Visitor - Guest</label>
-      <div class="other-wrap"><label class="radio"><input type="radio" name="dept" value="__other"> Other</label><input type="text" id="deptOther" placeholder="Specify" autocomplete="off"></div>
+      <div class="other-wrap"><label class="radio"><input type="radio" name="dept" value="__other"> Other</label><input type="text" id="deptOther" maxlength="80" placeholder="Specify" autocomplete="off"></div>
     </div>
 
     <button class="btn" id="tSubmit">Submit</button>
@@ -76,9 +76,12 @@
 
   <div class="card">
     <h1 style="font-size:24px;">Download training log</h1>
-    <p class="sub">Restricted. Enter the download password to pull all entries as a CSV file.</p>
+    <p class="sub">Restricted. Sign in with the team admin account to pull all entries as a CSV file.</p>
     <div class="dlrow">
-      <input type="password" id="dlPass" placeholder="Enter password" autocomplete="off">
+      <input type="text" id="dlEmail" placeholder="Admin email" autocomplete="username" inputmode="email">
+    </div>
+    <div class="dlrow">
+      <input type="password" id="dlPass" placeholder="Password" autocomplete="current-password">
       <button class="btn" id="dlBtn">Download CSV</button>
     </div>
     <div class="errmsg" id="dlErr"></div>
@@ -90,6 +93,7 @@
 
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script>
 (function(){
   var firebaseConfig = {
@@ -100,9 +104,12 @@
     messagingSenderId: "465126077052",
     appId: "1:465126077052:web:33404e8b0855fb48590ff9"
   };
-  var DOWNLOAD_PASSWORD = "Hazmat68";
+  // Downloads are protected by Firebase Authentication + Firestore rules (see firestore.rules),
+  // not by anything in this page, because page source is public.
   firebase.initializeApp(firebaseConfig);
   var db = firebase.firestore();
+  var auth = firebase.auth();
+  auth.setPersistence(firebase.auth.Auth.Persistence.NONE);
 
   function deptVal(){
     var sel = document.querySelector('input[name="dept"]:checked');
@@ -142,7 +149,8 @@
     });
   });
 
-  function csvEsc(v){ v = String(v == null ? "" : v); return /[",\n]/.test(v) ? '"' + v.replace(/"/g,'""') + '"' : v; }
+  // Entries come from the public form: neutralise anything Excel would run as a formula.
+  function csvEsc(v){ v = String(v == null ? "" : v); if(/^[=+\-@\t\r]/.test(v)) v = "'" + v; return /[",\n]/.test(v) ? '"' + v.replace(/"/g,'""') + '"' : v; }
   function fmtTs(ts){
     try {
       var d = ts.toDate();
@@ -152,10 +160,17 @@
   }
   document.getElementById('dlBtn').addEventListener('click', function(){
     hideErr('dlErr');
-    if(document.getElementById('dlPass').value !== DOWNLOAD_PASSWORD){ showErr('dlErr', 'Wrong password.'); return; }
+    var email = document.getElementById('dlEmail').value.trim();
+    var pass = document.getElementById('dlPass').value;
+    if(!email || !pass){ showErr('dlErr', 'Enter the admin email and password.'); return; }
     var btn = document.getElementById('dlBtn');
-    btn.disabled = true; btn.textContent = 'Loading...';
-    db.collection('trainingLogs').orderBy('submittedAt', 'desc').get().then(function(snap){
+    btn.disabled = true; btn.textContent = 'Signing in...';
+    auth.signInWithEmailAndPassword(email, pass).catch(function(err){
+      err.signIn = true; throw err;
+    }).then(function(){
+      btn.textContent = 'Loading...';
+      return db.collection('trainingLogs').orderBy('submittedAt', 'desc').get();
+    }).then(function(snap){
       var rows = [["Training date","First name","Last name","Department","Submitted at"]];
       snap.forEach(function(doc){
         var r = doc.data();
@@ -170,8 +185,13 @@
       document.body.appendChild(a); a.click();
       setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 500);
     }).catch(function(err){
-      showErr('dlErr', 'Could not load entries. (' + (err.code || 'error') + ')');
+      var code = err.code || 'error';
+      if(err.signIn) showErr('dlErr', code === 'auth/network-request-failed' ? 'No connection. Try again with signal.' : 'Wrong email or password.');
+      else if(code === 'permission-denied') showErr('dlErr', 'This account is not allowed to download the training log.');
+      else showErr('dlErr', 'Could not load entries. (' + code + ')');
     }).finally(function(){
+      document.getElementById('dlPass').value = '';
+      auth.signOut().catch(function(){});
       btn.disabled = false; btn.textContent = 'Download CSV';
     });
   });

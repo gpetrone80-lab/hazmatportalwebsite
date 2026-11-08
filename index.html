@@ -477,19 +477,19 @@ const ERG_NAME_INDEX = {"acetylene, dissolved":"1001","air, compressed":"1002","
   <div class="wn-box" role="dialog" aria-modal="true" aria-labelledby="wnTitle">
     <div class="wn-title" id="wnTitle">What&rsquo;s New</div>
     <ul class="wn-list">
-      <li><strong>Training log:</strong> saves to the team database instead of the Microsoft Form</li>
-      <li><strong>ERG lookup:</strong> 1,983 materials, works offline</li>
-      <li><strong>Unit converter:</strong> pressure, volume, length, temperature</li>
-      <li><strong>Accountability board:</strong> zones, PAR checks, timers</li>
-      <li><strong>Meter log:</strong> readings from several monitors, with CSV export</li>
-      <li><strong>Mobile app:</strong> install button and QR code</li>
+      <li><strong>Accountability board:</strong> saves on this device, so a refresh won&rsquo;t wipe it. PAR due and overdue alerts. Undo if you remove a unit by mistake.</li>
+      <li><strong>Meter log:</strong> readings outside safe limits turn red.</li>
+      <li><strong>ERG lookup:</strong> red banner for toxic inhalation hazards.</li>
+      <li><strong>On your phone:</strong> new Crews tab and bigger buttons.</li>
+      <li><strong>Direct links:</strong> each tool has its own link, and the Back button works.</li>
+      <li><strong>Shared device?</strong> Tap Clear board when the incident is over.</li>
     </ul>
     <button class="wn-btn" id="wnOk">Got it</button>
   </div>
 </div>
 <script>
 (function(){
-  var KEY='wn_seen_v1';
+  var KEY='wn_seen_v2';
   try{
     if(localStorage.getItem(KEY)==='1')return;
     var m=document.getElementById('wnModal');

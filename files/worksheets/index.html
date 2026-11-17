@@ -2,6 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'self'; form-action 'self'">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <script>/* Refuse to run inside another site's frame (clickjacking) */if(window.top!==window.self){try{window.top.location.replace(window.location.href)}catch(e){document.documentElement.style.display="none"}}</script>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Team Worksheets — Hazmat Portal</title>
 <link rel="icon" type="image/png" sizes="192x192" href="../icon-192.png">

@@ -2,6 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <script>/* Refuse to run inside another site's frame (clickjacking) */if(window.top!==window.self){try{window.top.location.replace(window.location.href)}catch(e){document.documentElement.style.display="none"}}</script>
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="color-scheme" content="light dark">
   <!-- PWA: home-screen icon + theme (re-apply after every artifact export, before </body> popup snippet) -->
@@ -363,7 +366,7 @@ const ERG_NAME_INDEX = {"acetylene, dissolved":"1001","air, compressed":"1002","
   function fmtDateTime(ts){return new Date(ts).toLocaleString([],{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit'})}
   function dur(ms){const m=Math.floor(ms/60000);return m<60?m+'m':Math.floor(m/60)+'h '+(m%60)+'m'}
   function download(name,content,type){const blob=new Blob([content],{type:type||'text/plain'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500)}
-  function csv(v){v=String(v==null?'':v);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v}
+  function csv(v){v=String(v==null?'':v);if(/^[=+\-@\t\r]/.test(v))v="'"+v;return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v}
   function stamp(){const d=new Date(),p=n=>String(n).padStart(2,'0');return d.getFullYear()+p(d.getMonth()+1)+p(d.getDate())+'-'+p(d.getHours())+p(d.getMinutes())}
 
   function go(id,fromHistory){if(!document.getElementById(id)||!document.getElementById(id).classList.contains('view'))id='dashboard';if(!fromHistory&&location.hash.slice(1)!==id&&!(id==='dashboard'&&!location.hash))history.pushState(null,'',id==='dashboard'?location.pathname+location.search:'#'+id);$$('.view').forEach(v=>v.classList.toggle('active',v.id===id));$$('[data-go]').forEach(b=>b.classList.toggle('active',b.dataset.go===id));window.scrollTo({top:0,behavior:'smooth'});if(id==='erg'&&!fromHistory)setTimeout(()=>$('#ergQuery').focus(),80);if(id==='accountability'){updateIncidentClock();renderAccountability()}}
@@ -452,7 +455,7 @@ const ERG_NAME_INDEX = {"acetylene, dissolved":"1001","air, compressed":"1002","
   const SESSION_KEY='hp_session_v1',PAR_DUE_MIN=15,PAR_LATE_MIN=20;
   function saveSession(){try{localStorage.setItem(SESSION_KEY,JSON.stringify({v:1,savedAt:Date.now(),incident:$('#incidentName').value,crews,meters,board:$$('[data-board]').map(e=>e.value)}))}catch(e){}}
   function applyParState(){crews.forEach(c=>{const card=document.querySelector('[data-crewcard="'+c.id+'"]');if(!card)return;const mins=(Date.now()-(c.parAt||c.arrivedAt))/60000,late=mins>=PAR_LATE_MIN,due=!late&&mins>=PAR_DUE_MIN;card.classList.toggle('par-overdue',late);card.classList.toggle('par-due',due);const f=card.querySelector('.par-flag');if(f)f.textContent=late?'PAR OVERDUE':due?'PAR DUE':''})}
-  (function restoreSession(){let st=null;try{st=JSON.parse(localStorage.getItem(SESSION_KEY)||'null')}catch(e){}if(!st||st.v!==1)return;crews=Array.isArray(st.crews)?st.crews:[];meters=Array.isArray(st.meters)?st.meters:[];$('#incidentName').value=st.incident||'';const bd=$$('[data-board]');(st.board||[]).forEach((v,i)=>{if(bd[i])bd[i].value=v});if(crews.length||meters.length||(st.board||[]).some(Boolean))setTimeout(()=>toast('Restored your last session from this device (saved '+dur(Date.now()-st.savedAt)+' ago).'),500)})();
+  (function restoreSession(){let st=null;try{st=JSON.parse(localStorage.getItem(SESSION_KEY)||'null')}catch(e){}if(!st||st.v!==1)return;const okId=v=>typeof v==='string'&&/^[a-z0-9]{1,40}$/i.test(v),num=(v,d)=>Number.isFinite(+v)&&+v>0?+v:d,now=Date.now();crews=(Array.isArray(st.crews)?st.crews:[]).filter(c=>c&&okId(c.id)&&Array.isArray(c.members)).map(c=>Object.assign(c,{unit:String(c.unit||''),department:String(c.department||''),zone:String(c.zone||'Staging'),arrivedAt:num(c.arrivedAt,now),parAt:num(c.parAt,0),members:c.members.filter(m=>m&&okId(m.id)).map(m=>Object.assign(m,{lastName:String(m.lastName||''),assignment:String(m.assignment||'Staging (available)'),arrivedAt:num(m.arrivedAt,now)}))}));meters=(Array.isArray(st.meters)?st.meters:[]).filter(m=>m&&okId(m.id)&&Array.isArray(m.readings)).map(m=>Object.assign(m,{readings:m.readings.filter(r=>r&&typeof r==='object').map(r=>Object.assign(r,{ts:num(r.ts,now)}))}));$('#incidentName').value=st.incident||'';const bd=$$('[data-board]');(st.board||[]).forEach((v,i)=>{if(bd[i])bd[i].value=v});if(crews.length||meters.length||(st.board||[]).some(Boolean))setTimeout(()=>toast('Restored your last session from this device (saved '+dur(Date.now()-st.savedAt)+' ago).'),500)})();
   $('#incidentName').addEventListener('input',saveSession);$$('[data-board]').forEach(el=>el.addEventListener('input',saveSession));
   $$('[data-jump]').forEach(b=>b.addEventListener('click',()=>document.getElementById(b.dataset.jump).scrollIntoView({behavior:'smooth',block:'start'})));
   renderPendingMembers();renderAccountability();updateIncidentClock();renderMeters();foamCalc();
